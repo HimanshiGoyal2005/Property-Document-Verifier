@@ -10,13 +10,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/genai": "^1.47.0",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "geist": "^1.7.0",
     "next": "14.2.3",
+    "pdf-parse": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "dotenv": "^16.4.5",
-    "@google/genai": "1.47.0",
-    "pdf-parse": "^1.1.1",
-    "clsx": "^2.1.1",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
