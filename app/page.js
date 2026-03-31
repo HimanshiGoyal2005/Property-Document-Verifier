@@ -1,134 +1,34 @@
 "use client";
 import { useState, useRef, useCallback, useEffect } from "react";
-
-// ── MOCK DATA ──────────────────────────────────────────────────────────────────
-const MOCK_REPORT = {
-  id: "demo-critical-001",
-  state: "Maharashtra",
-  created_at: new Date().toISOString(),
-  overall_risk: "critical",
-  summary: "Verification of 4 documents revealed critical discrepancies. Survey number mismatch and buyer name variation detected. Transaction must not proceed without resolution.",
-  flag_count: 4,
-  critical_count: 2,
-  warning_count: 2,
-  all_flags: [
-    {
-      severity: "critical",
-      field: "property.survey_number",
-      values: ["10/2", "10/3"],
-      description: "Survey numbers do not match. Sale Deed states Gat No. 10/2 while Encumbrance Certificate records Gat No. 10/3.",
-      recommendation: "Verify correct survey number with Sub-Registrar office, Dapoli. All documents must reflect the same Gat number before proceeding.",
-    },
-    {
-      severity: "critical",
-      field: "missing_document",
-      values: ["Index II"],
-      description: "Index II is mandatory in Maharashtra for all registered documents but was not found in the submission.",
-      recommendation: "Obtain certified Index II from Sub-Registrar office, Dapoli before proceeding with this transaction.",
-    },
-    {
-      severity: "warning",
-      field: "parties.buyer.name",
-      values: ["YASH DAGA", "YASH DAGGA"],
-      description: "Buyer name spelling differs between Sale Deed (YASH DAGA) and 7/12 Extract (YASH DAGGA). Could indicate different individuals.",
-      recommendation: "Request original government-issued ID proof from buyer to confirm identity and correct spelling.",
-    },
-    {
-      severity: "warning",
-      field: "transaction.consideration_amount",
-      values: ["Rs. 40,00,000"],
-      description: "Consideration amount should be verified against current market value for Ganpatipule, Dapoli area to confirm adequate stamp duty was paid.",
-      recommendation: "Obtain current ready reckoner rates from the District Registrar and verify stamp duty adequacy.",
-    },
-  ],
-  compliance: {
-    state: "Maharashtra",
-    compliant: false,
-    missing_documents: ["Index II"],
-    mandatory_required: ["Sale Deed", "Index II", "7/12 Extract", "Encumbrance Certificate"],
-    uploaded_documents: ["sale_deed", "seven_twelve", "ec"],
-    stamp_duty_rate: "5%",
-    registration_fee_rate: "1%",
-    notes: [
-      "Index II is mandatory for all registered documents in Maharashtra",
-      "7/12 Extract confirms land records from Revenue Department",
-      "NA Order required if agricultural land converted to non-agricultural",
-    ],
-  },
-  cross_reference: {
-    is_title_chain_continuous: false,
-    title_chain: [
-      { owner: "KISHORE KARANDE", date: "15 March 2016", doc: "Sale Deed" },
-      { owner: "YASH DAGA", date: "15 March 2016", doc: "Sale Deed" },
-    ],
-    flags: [],
-    overall_risk: "critical",
-  },
-  documents: [
-    {
-      id: "doc-1",
-      doc_type: "Sale Deed",
-      confidence: "high",
-      parties: {
-        seller: { name: "KISHORE KARANDE", address: "751, Katraj, Pune 411035" },
-        buyer: { name: "YASH DAGA", address: "S.No.18, Maruti Mandir, Ratnagiri 415612" },
-      },
-      property: { survey_number: "10/2", area_sqft: "5 Hectares 0 Ares", district: "Ratnagiri", locality: "Ganpatipule" },
-      transaction: { consideration_amount: "Rs. 40,00,000", registration_date: "15 March 2016", registration_number: "MH-RGT-2016-04521" },
-    },
-    {
-      id: "doc-2",
-      doc_type: "7/12 Extract",
-      confidence: "high",
-      parties: {
-        seller: { name: "KISHORE KARANDE", address: null },
-        buyer: { name: "YASH DAGGA", address: null },
-      },
-      property: { survey_number: "10/2", area_sqft: "5 Hectares 0 Ares", district: "Ratnagiri", locality: "Ganpatipule" },
-      transaction: { consideration_amount: null, registration_date: null, registration_number: null },
-    },
-    {
-      id: "doc-3",
-      doc_type: "Encumbrance Certificate",
-      confidence: "medium",
-      parties: {
-        seller: { name: "KISHORE KARANDE", address: null },
-        buyer: { name: "YASH DAGA", address: null },
-      },
-      property: { survey_number: "10/3", area_sqft: "5 Hectares 0 Ares", district: "Ratnagiri", locality: "Ganpatipule" },
-      transaction: { consideration_amount: null, registration_date: "15 March 2016", registration_number: "MH-RGT-2016-04521" },
-    },
-  ],
-};
-
+ 
 const STATES = ["Maharashtra", "Karnataka", "Telangana", "Uttar Pradesh"];
-
+ 
 const RISK_CONFIG = {
   low:      { label: "LOW RISK",      bg: "bg-emerald-50",  border: "border-emerald-200", badge: "bg-emerald-100 text-emerald-800", dot: "bg-emerald-500", text: "text-emerald-700" },
   medium:   { label: "MEDIUM RISK",   bg: "bg-amber-50",    border: "border-amber-200",   badge: "bg-amber-100 text-amber-800",     dot: "bg-amber-500",   text: "text-amber-700"   },
   high:     { label: "HIGH RISK",     bg: "bg-orange-50",   border: "border-orange-200",  badge: "bg-orange-100 text-orange-800",   dot: "bg-orange-500",  text: "text-orange-700"  },
   critical: { label: "CRITICAL RISK", bg: "bg-red-50",      border: "border-red-200",     badge: "bg-red-100 text-red-800",         dot: "bg-red-500",     text: "text-red-700"     },
 };
-
+ 
 const SEV_CONFIG = {
   critical: { bar: "bg-red-500",    badge: "bg-red-100 text-red-700 border-red-200",    icon: "●", label: "CRITICAL" },
   warning:  { bar: "bg-amber-400",  badge: "bg-amber-100 text-amber-700 border-amber-200", icon: "▲", label: "WARNING"  },
   info:     { bar: "bg-blue-400",   badge: "bg-blue-100 text-blue-700 border-blue-200",  icon: "ℹ", label: "INFO"     },
 };
-
+ 
 const STEPS = [
   { id: "step_1", label: "Reading documents",       sub: "Gemini Vision extracts all fields" },
   { id: "step_2", label: "Cross-referencing",       sub: "Comparing fields across documents" },
   { id: "step_3", label: "State compliance check",  sub: "Verifying mandatory documents" },
   { id: "step_4", label: "Generating report",       sub: "Calculating risk and recommendations" },
 ];
-
+ 
 // ── GLOBAL STYLES ──────────────────────────────────────────────────────────────
 const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-
+ 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --cream: #F5F0E8;
     --ink: #0D1117;
@@ -138,17 +38,16 @@ const GLOBAL_CSS = `
     --border: #E5E0D5;
     --surface: #FEFCF8;
   }
-
+ 
   body {
     font-family: 'DM Sans', system-ui, sans-serif;
     background: var(--cream);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
-
+ 
   .serif { font-family: 'Instrument Serif', Georgia, serif; }
-
-  /* Upload zone */
+ 
   .drop-zone {
     border: 1.5px dashed var(--border);
     border-radius: 14px;
@@ -171,8 +70,7 @@ const GLOBAL_CSS = `
     transform: translateY(-1px);
     box-shadow: 0 8px 32px rgba(15,39,68,0.08);
   }
-
-  /* Buttons */
+ 
   .btn-primary {
     background: var(--navy);
     color: white;
@@ -200,7 +98,7 @@ const GLOBAL_CSS = `
     box-shadow: 0 8px 28px rgba(15,39,68,0.28);
   }
   .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-
+ 
   .btn-ghost {
     background: transparent;
     color: var(--muted);
@@ -217,8 +115,7 @@ const GLOBAL_CSS = `
     gap: 6px;
   }
   .btn-ghost:hover { background: white; border-color: #9CA3AF; color: var(--ink); }
-
-  /* Select */
+ 
   .state-select {
     width: 100%;
     padding: 12px 16px;
@@ -237,8 +134,7 @@ const GLOBAL_CSS = `
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(15,39,68,0.08);
   }
-
-  /* Animations */
+ 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -256,39 +152,36 @@ const GLOBAL_CSS = `
     0%   { background-position: -400px 0; }
     100% { background-position: 400px 0; }
   }
-
+ 
   .anim-up   { animation: fadeUp 0.5s ease both; }
   .anim-in   { animation: fadeIn 0.4s ease both; }
   .spinner   { animation: spin 0.75s linear infinite; }
   .pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
-
+ 
   .shimmer-bg {
     background: linear-gradient(90deg, #ede8df 25%, #e3ddd3 50%, #ede8df 75%);
     background-size: 800px 100%;
     animation: shimmer 1.6s infinite linear;
     border-radius: 6px;
   }
-
-  /* Cards */
+ 
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.04);
   }
-
-  /* Scrollbar */
+ 
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #D1C9BA; border-radius: 10px; }
-
-  /* Flag expand */
+ 
   details > summary { cursor: pointer; list-style: none; user-select: none; }
   details > summary::-webkit-details-marker { display: none; }
 `;
-
+ 
 // ── COMPONENTS ─────────────────────────────────────────────────────────────────
-
+ 
 function Logo({ compact }) {
   return (
     <div className="flex items-center gap-3">
@@ -316,11 +209,11 @@ function Logo({ compact }) {
     </div>
   );
 }
-
+ 
 function UploadZone({ files, setFiles }) {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
-
+ 
   const handleFiles = (incoming) => {
     const valid = Array.from(incoming).filter(f =>
       ["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(f.type)
@@ -330,15 +223,15 @@ function UploadZone({ files, setFiles }) {
       return [...prev, ...valid.filter(f => !existing.has(f.name))].slice(0, 10);
     });
   };
-
+ 
   const onDrop = useCallback(e => {
     e.preventDefault(); setDragging(false);
     handleFiles(e.dataTransfer.files);
   }, []);
-
+ 
   const onDragOver = e => { e.preventDefault(); setDragging(true); };
   const onDragLeave = () => setDragging(false);
-
+ 
   return (
     <div>
       <div
@@ -351,7 +244,7 @@ function UploadZone({ files, setFiles }) {
       >
         <input ref={inputRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp"
           style={{ display: "none" }} onChange={e => handleFiles(e.target.files)} />
-
+ 
         <div style={{
           width: 48, height: 48, borderRadius: 12, background: "rgba(15,39,68,0.06)",
           display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px",
@@ -362,7 +255,7 @@ function UploadZone({ files, setFiles }) {
             <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
         </div>
-
+ 
         <p style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", marginBottom: 4 }}>
           {dragging ? "Drop documents here" : "Upload property documents"}
         </p>
@@ -370,7 +263,7 @@ function UploadZone({ files, setFiles }) {
           PDF, JPG, PNG, WEBP · Up to 10 files
         </p>
       </div>
-
+ 
       {files.length > 0 && (
         <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
           {files.map((file, i) => (
@@ -405,7 +298,7 @@ function UploadZone({ files, setFiles }) {
     </div>
   );
 }
-
+ 
 function AgentProgress({ stepStatuses }) {
   return (
     <div className="card" style={{ padding: "28px 28px" }}>
@@ -417,13 +310,13 @@ function AgentProgress({ stepStatuses }) {
           Verifying your documents...
         </p>
       </div>
-
+ 
       <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
         {STEPS.map((step, i) => {
           const status = stepStatuses[step.id] || "pending";
           const isDone    = status === "done";
           const isRunning = status === "running";
-
+ 
           return (
             <div key={step.id} style={{
               display: "flex", alignItems: "center", gap: 16,
@@ -432,7 +325,6 @@ function AgentProgress({ stepStatuses }) {
               opacity: status === "pending" ? 0.4 : 1,
               transition: "opacity 0.3s ease",
             }}>
-              {/* Icon */}
               <div style={{
                 width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
@@ -453,7 +345,7 @@ function AgentProgress({ stepStatuses }) {
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#CBD5E1" }}/>
                 )}
               </div>
-
+ 
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", lineHeight: 1.3 }}>
                   {step.label}
@@ -462,7 +354,7 @@ function AgentProgress({ stepStatuses }) {
                   {step.sub}
                 </p>
               </div>
-
+ 
               {isDone && (
                 <span style={{ fontSize: 11, fontWeight: 600, color: "#059669", letterSpacing: "0.04em" }}>
                   DONE
@@ -480,17 +372,17 @@ function AgentProgress({ stepStatuses }) {
     </div>
   );
 }
-
+ 
 function RiskBanner({ report }) {
   const cfg = RISK_CONFIG[report.overall_risk] || RISK_CONFIG.low;
-
+ 
   return (
     <div style={{
       borderRadius: 16, padding: "28px 32px", marginBottom: 24,
       background: report.overall_risk === "critical" ? "#FFF1F2" : report.overall_risk === "high" ? "#FFF7ED" : "#F0FDF4",
       border: `1.5px solid ${report.overall_risk === "critical" ? "#FECDD3" : report.overall_risk === "high" ? "#FED7AA" : "#BBF7D0"}`,
     }} className="anim-up">
-
+ 
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
         <div style={{ flex: 1, minWidth: 260 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
@@ -512,7 +404,7 @@ function RiskBanner({ report }) {
             {report.summary}
           </p>
         </div>
-
+ 
         <div style={{ display: "flex", gap: 24, flexShrink: 0 }}>
           {[
             { val: report.critical_count, label: "Critical", color: "#DC2626" },
@@ -531,11 +423,11 @@ function RiskBanner({ report }) {
     </div>
   );
 }
-
+ 
 function FlagCard({ flag }) {
   const cfg = SEV_CONFIG[flag.severity] || SEV_CONFIG.info;
   const [open, setOpen] = useState(false);
-
+ 
   return (
     <div style={{
       borderRadius: 12, background: "white", border: "1px solid var(--border)",
@@ -544,9 +436,8 @@ function FlagCard({ flag }) {
       onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.07)"}
       onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}
     >
-      {/* Severity bar */}
       <div style={{ height: 3, background: flag.severity === "critical" ? "#DC2626" : flag.severity === "warning" ? "#F59E0B" : "#3B82F6" }}/>
-
+ 
       <div style={{ padding: "16px 20px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
           <div style={{ flex: 1 }}>
@@ -564,7 +455,7 @@ function FlagCard({ flag }) {
             <p style={{ fontSize: 14, color: "var(--ink)", lineHeight: 1.6 }}>
               {flag.description}
             </p>
-
+ 
             {flag.values && flag.values.length > 0 && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
                 {flag.values.map((v, i) => (
@@ -580,7 +471,7 @@ function FlagCard({ flag }) {
               </div>
             )}
           </div>
-
+ 
           <button onClick={() => setOpen(!open)} style={{
             flexShrink: 0, background: "none", border: "none", cursor: "pointer",
             fontSize: 18, color: "var(--muted)", padding: "2px 6px",
@@ -589,7 +480,7 @@ function FlagCard({ flag }) {
             ↓
           </button>
         </div>
-
+ 
         {open && (
           <div style={{
             marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)",
@@ -606,12 +497,12 @@ function FlagCard({ flag }) {
     </div>
   );
 }
-
+ 
 function TitleChain({ chain, continuous }) {
   if (!chain || chain.length === 0) {
     return <p style={{ fontSize: 13, color: "var(--muted)", fontStyle: "italic" }}>No deed chain found</p>;
   }
-
+ 
   return (
     <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
       {chain.map((link, i) => (
@@ -625,7 +516,7 @@ function TitleChain({ chain, continuous }) {
             <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>{link.date}</p>
             <p style={{ fontSize: 10, color: "var(--gold)", marginTop: 2, fontWeight: 500 }}>{link.doc}</p>
           </div>
-
+ 
           {i < chain.length - 1 && (
             <div style={{ textAlign: "center" }}>
               {continuous ? (
@@ -647,7 +538,7 @@ function TitleChain({ chain, continuous }) {
     </div>
   );
 }
-
+ 
 function ComplianceChecklist({ compliance }) {
   return (
     <div>
@@ -687,7 +578,7 @@ function ComplianceChecklist({ compliance }) {
           );
         })}
       </div>
-
+ 
       {compliance.notes?.length > 0 && (
         <div style={{ marginTop: 16, padding: "14px 16px", background: "rgba(15,39,68,0.03)", borderRadius: 10, borderLeft: "3px solid var(--navy)" }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: "var(--navy)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
@@ -703,11 +594,11 @@ function ComplianceChecklist({ compliance }) {
     </div>
   );
 }
-
+ 
 function DocumentCard({ doc }) {
   const [open, setOpen] = useState(false);
   const confColor = { high: "#059669", medium: "#D97706", low: "#DC2626" }[doc.confidence] || "#6B7280";
-
+ 
   return (
     <div style={{
       border: "1px solid var(--border)", borderRadius: 12, background: "white", overflow: "hidden",
@@ -736,7 +627,7 @@ function DocumentCard({ doc }) {
         </div>
         <span style={{ fontSize: 16, color: "var(--muted)", transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>↓</span>
       </button>
-
+ 
       {open && (
         <div style={{ padding: "0 18px 18px", borderTop: "1px solid var(--border)" }} className="anim-in">
           <div style={{ paddingTop: 14, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
@@ -764,7 +655,7 @@ function DocumentCard({ doc }) {
     </div>
   );
 }
-
+ 
 function SectionTitle({ children, count, countColor }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
@@ -779,49 +670,108 @@ function SectionTitle({ children, count, countColor }) {
     </div>
   );
 }
-
+ 
 // ── UPLOAD PAGE ────────────────────────────────────────────────────────────────
 function UploadPage({ onAnalyse }) {
   const [files, setFiles] = useState([]);
   const [selectedState, setSelectedState] = useState("");
   const [loading, setLoading] = useState(false);
   const [stepStatuses, setStepStatuses] = useState({});
-
+  const [error, setError] = useState(null);
+ 
   const canAnalyse = files.length > 0 && selectedState;
-
+ 
   const handleAnalyse = async () => {
     setLoading(true);
+    setError(null);
     setStepStatuses({});
-
-    // In production: replace with real SSE fetch to /api/analyse
-    // const formData = new FormData();
-    // files.forEach(f => formData.append("documents", f));
-    // formData.append("state", selectedState);
-    // const response = await fetch("/api/analyse", { method: "POST", body: formData });
-    // const reader = response.body.getReader(); ... (SSE handling)
-
-    // Demo simulation
-    for (const step of ["step_1", "step_2", "step_3", "step_4"]) {
-      await new Promise(r => setTimeout(r, 120));
-      setStepStatuses(p => ({ ...p, [step]: "running" }));
-      await new Promise(r => setTimeout(r, 900 + Math.random() * 500));
-      setStepStatuses(p => ({ ...p, [step]: "done" }));
+ 
+    try {
+      // Build multipart form data
+      const formData = new FormData();
+      files.forEach(f => formData.append("documents", f));
+      formData.append("state", selectedState);
+ 
+      // Call the real SSE endpoint — do NOT set Content-Type header
+      const response = await fetch("/api/analyse", {
+        method: "POST",
+        body: formData,
+      });
+ 
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+ 
+      // Read the SSE stream
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+ 
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+ 
+        const text = decoder.decode(value);
+        const lines = text.split("\n").filter(l => l.startsWith("data:"));
+ 
+        for (const line of lines) {
+          let data;
+          try {
+            data = JSON.parse(line.replace("data: ", "").trim());
+          } catch {
+            continue; // skip malformed lines
+          }
+ 
+          if (data.error) {
+            throw new Error(data.message || "Pipeline failed");
+          }
+ 
+          if (data.done && data.reportId) {
+            // Pipeline finished — fetch the full report
+            const reportRes = await fetch(`/api/report/${data.reportId}`);
+            if (!reportRes.ok) throw new Error("Failed to fetch report");
+            const report = await reportRes.json();
+            onAnalyse(report);
+            return;
+          }
+ 
+          // Update step progress
+          if (data.step) {
+            setStepStatuses(prev => ({ ...prev, [data.step]: data.status }));
+          }
+        }
+      }
+    } catch (err) {
+      setError(err.message || "Something went wrong. Please try again.");
+      setLoading(false);
+      setStepStatuses({});
     }
-    await new Promise(r => setTimeout(r, 400));
-    onAnalyse({ ...MOCK_REPORT, state: selectedState });
   };
-
+ 
   if (loading) {
     return (
       <div style={{ minHeight: "100vh", background: "var(--cream)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
         <div style={{ width: "100%", maxWidth: 520 }} className="anim-up">
           <div style={{ marginBottom: 32 }}><Logo /></div>
           <AgentProgress stepStatuses={stepStatuses} />
+          {error && (
+            <div style={{
+              marginTop: 16, padding: "14px 18px", background: "#FFF1F2",
+              border: "1px solid #FECDD3", borderRadius: 10,
+            }}>
+              <p style={{ fontSize: 13, color: "#DC2626", fontWeight: 500 }}>⚠ {error}</p>
+              <button
+                onClick={() => { setLoading(false); setError(null); setStepStatuses({}); }}
+                style={{ marginTop: 10, fontSize: 12, color: "#DC2626", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+              >
+                Go back and try again
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   }
-
+ 
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
       {/* Top bar */}
@@ -835,9 +785,9 @@ function UploadPage({ onAnalyse }) {
           <span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 500 }}>AI Pipeline Ready</span>
         </div>
       </div>
-
+ 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
-
+ 
         {/* Left — Hero copy */}
         <div className="anim-up">
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: "rgba(15,39,68,0.06)", border: "1px solid var(--border)", marginBottom: 24 }}>
@@ -846,16 +796,16 @@ function UploadPage({ onAnalyse }) {
               Track 2 — Agentic AI
             </span>
           </div>
-
+ 
           <h2 className="serif" style={{ fontSize: 46, color: "var(--navy)", lineHeight: 1.1, marginBottom: 20, fontWeight: 400 }}>
             Property verification<br />
             <em style={{ color: "var(--gold)" }}>in 60 seconds.</em>
           </h2>
-
+ 
           <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.8, marginBottom: 36, maxWidth: 400 }}>
             Upload your sale deed, encumbrance certificate, and supporting documents. Our AI agent cross-references every field, checks state compliance, and flags every inconsistency.
           </p>
-
+ 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {[
               { icon: "📄", text: "Reads scanned, handwritten, and regional language documents" },
@@ -869,7 +819,7 @@ function UploadPage({ onAnalyse }) {
             ))}
           </div>
         </div>
-
+ 
         {/* Right — Upload card */}
         <div className="anim-up" style={{ animationDelay: "0.1s" }}>
           <div className="card" style={{ padding: "32px" }}>
@@ -879,14 +829,14 @@ function UploadPage({ onAnalyse }) {
             <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 28, lineHeight: 1.6 }}>
               Upload documents and select your state to begin the AI verification pipeline.
             </p>
-
+ 
             <div style={{ marginBottom: 22 }}>
               <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--ink)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                 Property Documents
               </label>
               <UploadZone files={files} setFiles={setFiles} />
             </div>
-
+ 
             <div style={{ marginBottom: 28 }}>
               <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--ink)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>
                 Property State
@@ -902,7 +852,7 @@ function UploadPage({ onAnalyse }) {
                 </svg>
               </div>
             </div>
-
+ 
             <button className="btn-primary" disabled={!canAnalyse} onClick={handleAnalyse}
               style={{ width: "100%", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
@@ -910,26 +860,25 @@ function UploadPage({ onAnalyse }) {
               </svg>
               Run PropCheck Analysis
             </button>
-
+ 
             {!canAnalyse && (
               <p style={{ textAlign: "center", fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
                 {files.length === 0 ? "Upload at least one document to continue" : "Select a state to continue"}
               </p>
             )}
-
-            {/* Demo hint */}
-            <div style={{ marginTop: 16, padding: "10px 14px", background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8 }}>
-              <p style={{ fontSize: 12, color: "#92400E", textAlign: "center" }}>
-                <strong>Demo mode:</strong> Upload any file, select Maharashtra, click Analyse
-              </p>
-            </div>
+ 
+            {error && (
+              <div style={{ marginTop: 14, padding: "12px 16px", background: "#FFF1F2", border: "1px solid #FECDD3", borderRadius: 8 }}>
+                <p style={{ fontSize: 12, color: "#DC2626" }}>⚠ {error}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
+ 
 // ── RESULTS PAGE ───────────────────────────────────────────────────────────────
 function ResultsPage({ report, onBack }) {
   const handleDownload = () => {
@@ -972,7 +921,7 @@ function ResultsPage({ report, onBack }) {
       lines.push("");
     });
     lines.push("PropCheck AI — For informational purposes only. Obtain independent legal advice before transacting.");
-
+ 
     const blob = new Blob([lines.join("\n")], { type: "text/plain" });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement("a");
@@ -981,7 +930,7 @@ function ResultsPage({ report, onBack }) {
     a.click();
     URL.revokeObjectURL(url);
   };
-
+ 
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)" }}>
       {/* Top bar */}
@@ -1008,11 +957,11 @@ function ResultsPage({ report, onBack }) {
           </button>
         </div>
       </div>
-
+ 
       <div style={{ maxWidth: 820, margin: "0 auto", padding: "40px 24px" }}>
-
+ 
         <RiskBanner report={report} />
-
+ 
         {/* Flags */}
         <div className="card anim-up" style={{ padding: "24px 28px", marginBottom: 20 }}>
           <SectionTitle count={`${report.flag_count} found`} countColor="#DC2626">
@@ -1022,7 +971,7 @@ function ResultsPage({ report, onBack }) {
             {report.all_flags.map((flag, i) => <FlagCard key={i} flag={flag} />)}
           </div>
         </div>
-
+ 
         {/* Title Chain */}
         <div className="card anim-up" style={{ padding: "24px 28px", marginBottom: 20, animationDelay: "0.05s" }}>
           <SectionTitle
@@ -1036,7 +985,7 @@ function ResultsPage({ report, onBack }) {
             continuous={report.cross_reference.is_title_chain_continuous}
           />
         </div>
-
+ 
         {/* Compliance */}
         <div className="card anim-up" style={{ padding: "24px 28px", marginBottom: 20, animationDelay: "0.1s" }}>
           <SectionTitle
@@ -1047,7 +996,7 @@ function ResultsPage({ report, onBack }) {
           </SectionTitle>
           <ComplianceChecklist compliance={report.compliance} />
         </div>
-
+ 
         {/* Documents */}
         <div className="card anim-up" style={{ padding: "24px 28px", marginBottom: 20, animationDelay: "0.15s" }}>
           <SectionTitle count={report.documents.length}>
@@ -1057,7 +1006,7 @@ function ResultsPage({ report, onBack }) {
             {report.documents.map((doc) => <DocumentCard key={doc.id} doc={doc} />)}
           </div>
         </div>
-
+ 
         {/* Footer */}
         <div style={{ textAlign: "center", padding: "16px 0 32px" }}>
           <p style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.8 }}>
@@ -1072,11 +1021,11 @@ function ResultsPage({ report, onBack }) {
     </div>
   );
 }
-
+ 
 // ── ROOT ───────────────────────────────────────────────────────────────────────
 export default function PropCheckAI() {
   const [report, setReport] = useState(null);
-
+ 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
@@ -1087,3 +1036,4 @@ export default function PropCheckAI() {
     </>
   );
 }
+ 
