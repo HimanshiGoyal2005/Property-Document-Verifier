@@ -1,25 +1,17 @@
 {
-  "name": "propcheck",
-  "version": "0.1.0",
-  "type": "module",
+  "name": "propcheck-ai",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start"
   },
   "dependencies": {
-    "@google/genai": "^1.46.0",
-    "dotenv": "^17.3.1",
-    "next": "16.2.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.1",
-    "tailwindcss": "^4"
+    "next": "14.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "dotenv": "^16.4.5"
   }
 }

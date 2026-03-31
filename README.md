@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PropCheck AI - Modular Structure
 
-## Getting Started
+This project has been restructured from a single monolithic file into a modular architecture for better maintainability and reusability.
 
-First, run the development server:
+## File Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+PropCheckAI/
+├── components/           # React components
+│   ├── UploadPage.jsx
+│   ├── ResultsPage.jsx
+│   ├── UploadZone.jsx
+│   ├── StateSelector.jsx
+│   ├── AgentProgress.jsx
+│   ├── FlagCard.jsx
+│   ├── TitleChain.jsx
+│   ├── ComplianceChecklist.jsx
+│   ├── DocumentSummary.jsx
+│   ├── SectionHeader.jsx
+│   ├── Logo.jsx
+│   └── RiskBadge.jsx
+├── constants/            # Application constants
+│   ├── tokens.js
+│   ├── riskConfig.js
+│   ├── stateDocs.js
+│   └── steps.js
+├── data/                 # Mock data
+│   └── mockReport.js
+├── icons/                # Icon components
+│   └── index.js
+├── styles/               # CSS styles
+│   └── main.css
+├── App.jsx               # Main application component
+├── index.js              # Entry point
+└── PropCheckAI.old.jsx   # Original monolithic file (backup)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+To use this modular structure:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Import the main App component from `index.js`
+2. Ensure your build system supports ES6 modules and JSX
+3. Import the CSS file in your main component
 
-## Learn More
+## Benefits
 
-To learn more about Next.js, take a look at the following resources:
+- **Maintainability**: Each component has a single responsibility
+- **Reusability**: Components can be easily imported and reused
+- **Testing**: Individual components can be tested in isolation
+- **Collaboration**: Multiple developers can work on different parts simultaneously
+- **Performance**: Better tree-shaking and code splitting opportunities
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Original File
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The original monolithic file has been preserved as `PropCheckAI.old.jsx` for reference.
