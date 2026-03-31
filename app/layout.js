@@ -1,11 +1,11 @@
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { 
-  GeistPixelSquare, 
-  GeistPixelGrid, 
-  GeistPixelCircle, 
-  GeistPixelTriangle, 
-  GeistPixelLine 
+import {
+  GeistPixelSquare,
+  GeistPixelGrid,
+  GeistPixelCircle,
+  GeistPixelTriangle,
+  GeistPixelLine
 } from "geist/font/pixel";
 import "./globals.css";
 
