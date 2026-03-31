@@ -1,17 +1,26 @@
 {
   "name": "propcheck-ai",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "@google/generative-ai": "^0.11.0",
+    "pdf-parse": "^1.1.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.3.0"
+  },
+  "devDependencies": {
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1"
   }
 }
