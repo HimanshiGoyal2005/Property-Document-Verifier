@@ -355,5 +355,409 @@
       }
     ],
     "is_title_chain_continuous": true
+  },
+  "bee35779-cd4f-4420-a622-22c0286ce531": {
+    "id": "bee35779-cd4f-4420-a622-22c0286ce531",
+    "state": "Maharashtra",
+    "created_at": "2026-04-01T15:40:17.195Z",
+    "overall_risk": "critical",
+    "summary": "Verification of 4 document(s) completed. 5 critical issue(s) require immediate attention. 5 warning(s) should be reviewed. Overall risk: CRITICAL.",
+    "documents": [
+      {
+        "doc_type": "index_2",
+        "state": "Maharashtra",
+        "confidence": "high",
+        "parties": {
+          "seller": {
+            "name": "MR. KISHORE KARANDE",
+            "father_or_husband_name": null,
+            "address": "751, Katraj, Pune - 411035 (Maharashtra State, India)"
+          },
+          "buyer": {
+            "name": "MR. YASH DAGA",
+            "father_or_husband_name": null,
+            "address": "S.No. 18, Maruti Mandir, Ratnagiri - 415612 (Maharashtra State, India)"
+          }
+        },
+        "property": {
+          "survey_number": "Gat No. 10/2",
+          "plot_number": null,
+          "area_sqft": 538195,
+          "locality": "Village Ganpatipule, Taluka Dapoli",
+          "district": "Ratnagiri",
+          "state": "Maharashtra"
+        },
+        "transaction": {
+          "consideration_amount": "Rs. 40,00,000/-",
+          "stamp_duty_paid": "Rs. 2,00,000/-",
+          "registration_date": "15.03.2016",
+          "registration_number": "MH-RGT-2016-04521",
+          "sub_registrar_office": "Sub-Registrar, Dapoli"
+        },
+        "encumbrances_mentioned": [],
+        "witnesses": [],
+        "extraction_notes": "Area provided in Hectares and Ares (5 Hectares 0 Ares) was converted to square feet (approximately 538195 sqft)."
+      },
+      {
+        "doc_type": "sale_deed",
+        "state": "Maharashtra",
+        "confidence": "high",
+        "parties": {
+          "seller": {
+            "name": "MR. KISHORE KARANDE",
+            "father_or_husband_name": null,
+            "address": "751, Katraj, Pune - 411035 (Maharashtra State, India)"
+          },
+          "buyer": {
+            "name": "MR. YASH DAGA",
+            "father_or_husband_name": null,
+            "address": "S.No. 18, Maruti Mandir, Ratnagiri - 415612 (Maharashtra State, India)"
+          }
+        },
+        "property": {
+          "survey_number": "Gat No. 10/2",
+          "plot_number": null,
+          "area_sqft": "5 Hectares 0 Ares",
+          "locality": "Village Ganpatipule, Taluka Dapoli",
+          "district": "Ratnagiri",
+          "state": "Maharashtra"
+        },
+        "transaction": {
+          "consideration_amount": "Rs. 40,00,000/-",
+          "stamp_duty_paid": null,
+          "registration_date": "15.03.2016",
+          "registration_number": "MH-RGT-2016-04521",
+          "sub_registrar_office": "Sub-Registrar Office, Dapoli, Ratnagiri"
+        },
+        "encumbrances_mentioned": [],
+        "witnesses": [],
+        "extraction_notes": "The document is titled 'AGREEMENT FOR SALE'. Property area is specified in Hectares and Ares, not sqft. Witness details are left blank in the document."
+      },
+      {
+        "doc_type": "ec",
+        "state": "Maharashtra",
+        "confidence": "high",
+        "parties": {
+          "seller": {
+            "name": "MR. KISHORE KARANDE",
+            "father_or_husband_name": null,
+            "address": null
+          },
+          "buyer": {
+            "name": "MR. YASH DAGA",
+            "father_or_husband_name": null,
+            "address": null
+          }
+        },
+        "property": {
+          "survey_number": "10/3",
+          "plot_number": null,
+          "area_sqft": null,
+          "locality": "Ganpatipule",
+          "district": "Ratnagiri",
+          "state": "Maharashtra"
+        },
+        "transaction": {
+          "consideration_amount": null,
+          "stamp_duty_paid": null,
+          "registration_date": "15.03.2016",
+          "registration_number": "MH-RGT-2016-0452",
+          "sub_registrar_office": "Sub-Registrar Dapoli"
+        },
+        "encumbrances_mentioned": [],
+        "witnesses": [],
+        "extraction_notes": "Area is mentioned as '5 Hectares 0 Ares' and not in sqft. Consideration amount and stamp duty details are not present in the document."
+      },
+      {
+        "doc_type": "seven_twelve",
+        "state": "Maharashtra",
+        "confidence": "high",
+        "parties": {
+          "seller": {
+            "name": "MR. KISHORE KARANDE",
+            "father_or_husband_name": null,
+            "address": null
+          },
+          "buyer": {
+            "name": "MR. YASH DAGGA",
+            "father_or_husband_name": null,
+            "address": null
+          }
+        },
+        "property": {
+          "survey_number": "10/2",
+          "plot_number": null,
+          "area_sqft": null,
+          "locality": "Ganpatipule",
+          "district": "Ratnagiri",
+          "state": "Maharashtra"
+        },
+        "transaction": {
+          "consideration_amount": null,
+          "stamp_duty_paid": null,
+          "registration_date": "15.03.2016",
+          "registration_number": "MH-RGT-2016-04521",
+          "sub_registrar_office": null
+        },
+        "encumbrances_mentioned": [],
+        "witnesses": [],
+        "extraction_notes": "Area is provided in Hectares and Ares, not in square feet. Sub-Registrar office is not explicitly mentioned, only implied by the registration number (MH-RGT)."
+      }
+    ],
+    "cross_reference": {
+      "total_documents": 4,
+      "flags": [
+        {
+          "severity": "critical",
+          "field": "property.survey_number",
+          "values": [
+            "Gat No. 10/2",
+            "Gat No. 10/2",
+            "10/3",
+            "10/2"
+          ],
+          "description": "Survey numbers do not match across documents: Gat No. 10/2 vs Gat No. 10/2 vs 10/3 vs 10/2",
+          "recommendation": "Verify which survey number is correct with the Sub-Registrar office. Do not proceed until resolved."
+        },
+        {
+          "severity": "warning",
+          "field": "transaction.consideration_amount",
+          "values": [
+            "Rs. 40,00,000/-"
+          ],
+          "description": "Document 1 has unusually low consideration amount: ₹Rs. 40,00,000/-. Possible undervaluation or benami transaction.",
+          "recommendation": "Verify market value with local Sub-Registrar. Stamp duty must be paid on market value, not declared value."
+        },
+        {
+          "severity": "warning",
+          "field": "transaction.consideration_amount",
+          "values": [
+            "Rs. 40,00,000/-"
+          ],
+          "description": "Document 2 has unusually low consideration amount: ₹Rs. 40,00,000/-. Possible undervaluation or benami transaction.",
+          "recommendation": "Verify market value with local Sub-Registrar. Stamp duty must be paid on market value, not declared value."
+        },
+        {
+          "severity": "critical",
+          "field": "property.survey_number",
+          "values": [
+            "Gat No. 10/2",
+            "10/3"
+          ],
+          "description": "The Encumbrance Certificate (EC) shows survey number 10/3, whereas the Sale Deed, Index 2, and 7/12 extract show 10/2. This is a major discrepancy indicating either the EC was pulled for the wrong property or there is a recording error in the sub-registrar's database.",
+          "recommendation": "The lawyer must apply for a fresh Encumbrance Certificate specifically for Gat No. 10/2 for the period 2015-2024 to ensure the title is clear and the current EC provided is not for an adjacent plot."
+        },
+        {
+          "severity": "critical",
+          "field": "witnesses",
+          "values": [
+            "null",
+            "blank"
+          ],
+          "description": "The Sale Deed (Document 2) notes that witness details are left blank. Under the Registration Act, 1908, a deed must be attested by at least two witnesses for valid registration. A registered document with blank witness fields is a massive red flag for fraud or a procedural lapse that could void the transfer.",
+          "recommendation": "Physical inspection of the original registered Sale Deed is mandatory to check for physical signatures of witnesses and their ID proofs. Contact the Sub-Registrar Office, Dapoli to verify how the document was accepted for registration without witnesses."
+        },
+        {
+          "severity": "critical",
+          "field": "transaction.registration_number",
+          "values": [
+            "MH-RGT-2016-04521",
+            "MH-RGT-2016-0452"
+          ],
+          "description": "The registration number on the Encumbrance Certificate (0452) is missing the final digit compared to all other documents (04521). This suggests the EC search was conducted with an incorrect or incomplete registration number.",
+          "recommendation": "Verify the exact registration number from the Sub-Registrar's online portal (iGR Maharashtra). The discrepancy confirms the current EC provided is unreliable."
+        },
+        {
+          "severity": "warning",
+          "field": "parties.buyer.name",
+          "values": [
+            "MR. YASH DAGA",
+            "MR. YASH DAGGA"
+          ],
+          "description": "The 7/12 extract spells the buyer's surname as 'DAGGA' (double G), while the registered Sale Deed and Index 2 use 'DAGA'. Such phonetic variations can cause legal hurdles during future resale or while applying for bank loans.",
+          "recommendation": "The buyer should file for a correction in the revenue records (Mutation Entry) via the Tehsildar office to align the 7/12 extract with the registered Sale Deed."
+        },
+        {
+          "severity": "critical",
+          "field": "doc_type",
+          "values": [
+            "Index 2 - Sale Deed",
+            "Agreement for Sale"
+          ],
+          "description": "The Index 2 categorizes the transaction as a completed sale, but the actual document is titled 'AGREEMENT FOR SALE'. In Maharashtra, an Agreement for Sale does not transfer absolute title unless followed by a separate Sale Deed or unless it contains specific 'Conveyance' clauses and full stamp duty is paid.",
+          "recommendation": "Check the internal clauses of the document. If it is an Agreement for Sale, verify if a 'Deed of Confirmation' or 'Sale Deed' was executed later. If not, the title might still technically reside with the seller."
+        },
+        {
+          "severity": "warning",
+          "field": "property.locality",
+          "values": [
+            "Village Ganpatipule, Taluka Dapoli",
+            "Village Ganpatipule, Taluka Ratnagiri (Implied)"
+          ],
+          "description": "The documents list Ganpatipule under Taluka Dapoli. Geographically, Ganpatipule falls under Ratnagiri Taluka. This suggests a potential jurisdictional error in the document preparation or registration at the wrong Sub-Registrar Office.",
+          "recommendation": "Confirm the administrative boundaries. If the property was registered in the Dapoli SRO but actually falls under the jurisdiction of the Ratnagiri SRO, the registration could be challenged as 'Coram non-judice' (without jurisdiction)."
+        },
+        {
+          "severity": "warning",
+          "field": "transaction.consideration_amount",
+          "values": [
+            "Rs. 40,00,000/- for 5 Hectares"
+          ],
+          "description": "The consideration of 40 Lakhs for 5 Hectares (approx. 12.35 acres) in Ganpatipule—a high-value coastal tourist destination—appears significantly below market value. This is a red flag for potential under-valuation, stamp duty evasion, or a Benami transaction.",
+          "recommendation": "Obtain the 'Ready Reckoner' rates for Village Ganpatipule for the year 2016. Compare the transaction value with the government-mandated valuation to ensure there are no pending dues or notices from the Stamp Office/Income Tax Department."
+        }
+      ],
+      "flag_count": 10,
+      "critical_count": 5,
+      "warning_count": 5,
+      "overall_risk": "critical",
+      "title_chain": [
+        {
+          "owner": "MR. YASH DAGA",
+          "date": "15.03.2016",
+          "doc": "sale_deed"
+        }
+      ],
+      "is_title_chain_continuous": true,
+      "summary": "Verification of 4 documents found 10 issue(s): 5 critical issue(s) requiring immediate attention. 5 warning(s) to review. Overall risk level: CRITICAL."
+    },
+    "compliance": {
+      "state": "Maharashtra",
+      "supported": true,
+      "compliant": true,
+      "missing_documents": [],
+      "uploaded_documents": [
+        "index_2",
+        "sale_deed",
+        "ec",
+        "seven_twelve"
+      ],
+      "mandatory_required": [
+        "Sale Deed",
+        "Index II",
+        "7/12 Extract",
+        "Encumbrance Certificate"
+      ],
+      "flags": [],
+      "stamp_duty_rate": "5%",
+      "registration_fee_rate": "1%",
+      "notes": [
+        "Index II is mandatory for all registered documents in Maharashtra",
+        "7/12 Extract confirms land records from Revenue Department",
+        "NA Order required if agricultural land converted to non-agricultural"
+      ]
+    },
+    "all_flags": [
+      {
+        "severity": "critical",
+        "field": "property.survey_number",
+        "values": [
+          "Gat No. 10/2",
+          "Gat No. 10/2",
+          "10/3",
+          "10/2"
+        ],
+        "description": "Survey numbers do not match across documents: Gat No. 10/2 vs Gat No. 10/2 vs 10/3 vs 10/2",
+        "recommendation": "Verify which survey number is correct with the Sub-Registrar office. Do not proceed until resolved."
+      },
+      {
+        "severity": "warning",
+        "field": "transaction.consideration_amount",
+        "values": [
+          "Rs. 40,00,000/-"
+        ],
+        "description": "Document 1 has unusually low consideration amount: ₹Rs. 40,00,000/-. Possible undervaluation or benami transaction.",
+        "recommendation": "Verify market value with local Sub-Registrar. Stamp duty must be paid on market value, not declared value."
+      },
+      {
+        "severity": "warning",
+        "field": "transaction.consideration_amount",
+        "values": [
+          "Rs. 40,00,000/-"
+        ],
+        "description": "Document 2 has unusually low consideration amount: ₹Rs. 40,00,000/-. Possible undervaluation or benami transaction.",
+        "recommendation": "Verify market value with local Sub-Registrar. Stamp duty must be paid on market value, not declared value."
+      },
+      {
+        "severity": "critical",
+        "field": "property.survey_number",
+        "values": [
+          "Gat No. 10/2",
+          "10/3"
+        ],
+        "description": "The Encumbrance Certificate (EC) shows survey number 10/3, whereas the Sale Deed, Index 2, and 7/12 extract show 10/2. This is a major discrepancy indicating either the EC was pulled for the wrong property or there is a recording error in the sub-registrar's database.",
+        "recommendation": "The lawyer must apply for a fresh Encumbrance Certificate specifically for Gat No. 10/2 for the period 2015-2024 to ensure the title is clear and the current EC provided is not for an adjacent plot."
+      },
+      {
+        "severity": "critical",
+        "field": "witnesses",
+        "values": [
+          "null",
+          "blank"
+        ],
+        "description": "The Sale Deed (Document 2) notes that witness details are left blank. Under the Registration Act, 1908, a deed must be attested by at least two witnesses for valid registration. A registered document with blank witness fields is a massive red flag for fraud or a procedural lapse that could void the transfer.",
+        "recommendation": "Physical inspection of the original registered Sale Deed is mandatory to check for physical signatures of witnesses and their ID proofs. Contact the Sub-Registrar Office, Dapoli to verify how the document was accepted for registration without witnesses."
+      },
+      {
+        "severity": "critical",
+        "field": "transaction.registration_number",
+        "values": [
+          "MH-RGT-2016-04521",
+          "MH-RGT-2016-0452"
+        ],
+        "description": "The registration number on the Encumbrance Certificate (0452) is missing the final digit compared to all other documents (04521). This suggests the EC search was conducted with an incorrect or incomplete registration number.",
+        "recommendation": "Verify the exact registration number from the Sub-Registrar's online portal (iGR Maharashtra). The discrepancy confirms the current EC provided is unreliable."
+      },
+      {
+        "severity": "warning",
+        "field": "parties.buyer.name",
+        "values": [
+          "MR. YASH DAGA",
+          "MR. YASH DAGGA"
+        ],
+        "description": "The 7/12 extract spells the buyer's surname as 'DAGGA' (double G), while the registered Sale Deed and Index 2 use 'DAGA'. Such phonetic variations can cause legal hurdles during future resale or while applying for bank loans.",
+        "recommendation": "The buyer should file for a correction in the revenue records (Mutation Entry) via the Tehsildar office to align the 7/12 extract with the registered Sale Deed."
+      },
+      {
+        "severity": "critical",
+        "field": "doc_type",
+        "values": [
+          "Index 2 - Sale Deed",
+          "Agreement for Sale"
+        ],
+        "description": "The Index 2 categorizes the transaction as a completed sale, but the actual document is titled 'AGREEMENT FOR SALE'. In Maharashtra, an Agreement for Sale does not transfer absolute title unless followed by a separate Sale Deed or unless it contains specific 'Conveyance' clauses and full stamp duty is paid.",
+        "recommendation": "Check the internal clauses of the document. If it is an Agreement for Sale, verify if a 'Deed of Confirmation' or 'Sale Deed' was executed later. If not, the title might still technically reside with the seller."
+      },
+      {
+        "severity": "warning",
+        "field": "property.locality",
+        "values": [
+          "Village Ganpatipule, Taluka Dapoli",
+          "Village Ganpatipule, Taluka Ratnagiri (Implied)"
+        ],
+        "description": "The documents list Ganpatipule under Taluka Dapoli. Geographically, Ganpatipule falls under Ratnagiri Taluka. This suggests a potential jurisdictional error in the document preparation or registration at the wrong Sub-Registrar Office.",
+        "recommendation": "Confirm the administrative boundaries. If the property was registered in the Dapoli SRO but actually falls under the jurisdiction of the Ratnagiri SRO, the registration could be challenged as 'Coram non-judice' (without jurisdiction)."
+      },
+      {
+        "severity": "warning",
+        "field": "transaction.consideration_amount",
+        "values": [
+          "Rs. 40,00,000/- for 5 Hectares"
+        ],
+        "description": "The consideration of 40 Lakhs for 5 Hectares (approx. 12.35 acres) in Ganpatipule—a high-value coastal tourist destination—appears significantly below market value. This is a red flag for potential under-valuation, stamp duty evasion, or a Benami transaction.",
+        "recommendation": "Obtain the 'Ready Reckoner' rates for Village Ganpatipule for the year 2016. Compare the transaction value with the government-mandated valuation to ensure there are no pending dues or notices from the Stamp Office/Income Tax Department."
+      }
+    ],
+    "flag_count": 10,
+    "critical_count": 5,
+    "warning_count": 5,
+    "title_chain": [
+      {
+        "owner": "MR. YASH DAGA",
+        "date": "15.03.2016",
+        "doc": "sale_deed"
+      }
+    ],
+    "is_title_chain_continuous": true
   }
 }
