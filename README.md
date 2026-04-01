@@ -32,9 +32,8 @@ PropCheckAI/
 │   └── main.css
 ├── App.jsx               # Main application component
 ├── index.js              # Entry point
-└── PropCheckAI.old.jsx   # Original monolithic file (backup)
-```
 
+```
 ## Usage
 
 To use this modular structure:
